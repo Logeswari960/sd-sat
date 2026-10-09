@@ -1,0 +1,65 @@
+.api-page { max-width: 1100px; padding-top: 30px; }
+.back-link { color: #51809a; font-size: 11px; text-decoration: none; }
+.back-link:hover, .page-footer a:hover { color: var(--blue); }
+.api-intro { position: relative; margin: 26px 0 18px; padding: 30px 32px; border-radius: 7px; color: white; background: linear-gradient(110deg, #164b77, #176a94); }
+.api-intro .eyebrow { color: #b3d5e5; }
+.api-intro h1 { margin: 0 0 8px; font-size: 27px; }
+.api-intro > p:not(.eyebrow) { margin-bottom: 0; color: #d3e6ef; font-size: 12px; }
+.base-url { display: inline-flex; align-items: center; gap: 12px; margin-top: 21px; padding: 9px 12px; border: 1px solid #ffffff3a; border-radius: 4px; background: #ffffff0e; }
+.base-url span { color: #b4d4e2; font-size: 8px; font-weight: 700; }
+.base-url code { color: white; font-size: 11px; }
+.flow-block { padding: 20px 22px 17px; border: 1px solid var(--line); border-radius: 6px; background: white; }
+.flow-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.flow-title .eyebrow { margin: 0; }
+.flow-title strong { color: #3d5969; font: 700 12px 'Manrope', sans-serif; }
+.flow-track { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 17px; }
+.flow-track span { padding: 8px 10px; border: 1px solid #dce7ed; border-radius: 4px; color: #31586f; background: #f5f9fb; font-size: 9px; font-weight: 600; text-align: center; }
+.flow-track span:nth-of-type(3), .flow-track span:nth-of-type(4) { border-color: #bfd6e3; color: #135184; background: #eaf3f8; }
+.flow-track i { color: #78a7bc; font-size: 14px; font-style: normal; }
+.flow-block > p { margin: 14px 0 0; color: #85949b; font-size: 10px; }
+.endpoint-section { margin-top: 30px; }
+.endpoint-heading { margin: 0 0 12px 3px; }
+.endpoint-heading .eyebrow { margin-bottom: 4px; }
+.endpoint-heading h2 { margin: 0; font: 700 17px 'Manrope', sans-serif; }
+.endpoint { overflow: hidden; margin-bottom: 10px; border: 1px solid var(--line); border-radius: 5px; background: white; }
+.endpoint-title { display: flex; align-items: center; gap: 11px; min-height: 51px; padding: 0 15px; border-bottom: 1px solid var(--line); }
+.method { min-width: 48px; padding: 5px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; text-align: center; }
+.method.get { color: #24735b; background: #e8f5ee; }
+.method.post { color: #1f5f91; background: #e8f2f8; }
+.method.delete { color: #a34c4c; background: #fff0ef; }
+.endpoint-title > code { color: #294b61; font-size: 11px; font-weight: 600; }
+.endpoint-purpose { margin-left: auto; color: #8c9aa1; font-size: 10px; text-align: right; }
+.endpoint-body { display: grid; grid-template-columns: 1fr 1.2fr; gap: 13px 18px; padding: 15px; }
+.endpoint-body h3 { margin: 0 0 7px; color: #819099; font-size: 9px; font-weight: 700; }
+.endpoint-body pre { overflow-x: auto; min-height: 39px; margin: 0; padding: 10px 11px; border: 1px solid #e9eef1; border-radius: 4px; color: #345060; background: #f7f9fa; font: 10px/1.65 Consolas, 'Courier New', monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+.endpoint-body pre code { font: inherit; }
+.status-note { grid-column: 1 / -1; margin: 0; color: #89979e; font-size: 9px; line-height: 1.6; }
+.status-note b { margin-right: 3px; color: #516b7a; }
+.status-note code { color: #386481; font-size: 9px; }
+.safety-note { display: flex; gap: 13px; margin-top: 27px; padding: 19px 21px; border: 1px solid #e5d8b4; border-radius: 5px; background: #fffdf6; }
+.safety-mark { display: grid; flex: 0 0 25px; width: 25px; height: 25px; place-items: center; border-radius: 50%; color: #846b25; background: #f3eacb; font-weight: 700; }
+.safety-note h2 { margin: 1px 0 6px; color: #5f532f; font: 700 12px 'Manrope', sans-serif; }
+.safety-note p { margin: 0; color: #7c7258; font-size: 10px; line-height: 1.7; }
+.page-footer a { color: #58819a; text-decoration: none; }
+@media (max-width: 800px) {
+  .flow-track { flex-wrap: wrap; justify-content: flex-start; }
+  .flow-track span { flex: 1 1 auto; }
+  .flow-track i { padding: 0 1px; }
+}
+@media (max-width: 680px) {
+  .api-page { padding-top: 21px; }
+  .api-intro { padding: 23px 19px; }
+  .api-intro h1 { font-size: 23px; }
+  .flow-block { padding: 16px; }
+  .flow-title { align-items: flex-start; flex-direction: column; }
+  .flow-track { gap: 5px; }
+  .flow-track span { flex-basis: 40%; }
+  .flow-track i { display: none; }
+  .endpoint-title { flex-wrap: wrap; gap: 7px; padding: 10px; }
+  .endpoint-purpose { width: 100%; margin: 0 0 1px 56px; text-align: left; }
+  .endpoint-body { grid-template-columns: 1fr; gap: 12px; padding: 11px; }
+  .endpoint-body pre { font-size: 9px; }
+  .status-note { grid-column: auto; }
+  .safety-note { padding: 15px; }
+  .topbar .breadcrumb { display: flex; gap: 7px; font-size: 10px; }
+}

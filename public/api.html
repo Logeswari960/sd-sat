@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123f70">
+  <title>REST API Guide | SimpleBank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/api.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="/" aria-label="SimpleBank home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 12h24L16 5 4 12Zm3 3v9m6-9v9m6-9v9m6-9v9M4 27h24"/></svg></span><span>simple<span>bank</span></span></a>
+      <div class="nav-label">YOUR BANK</div><nav class="main-nav"><a class="nav-link" href="/"><span class="nav-icon">⌂</span>Dashboard</a><a class="nav-link is-active" href="/api.html"><span class="nav-icon">{ }</span>REST API guide</a></nav>
+      <div class="sidebar-bottom"><div class="demo-note"><span class="demo-dot"></span><span>DEMO ENVIRONMENT<small>Sample data only</small></span></div></div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div class="breadcrumb"><a href="/">Personal banking</a><span class="breadcrumb-divider">/</span><strong>REST API guide</strong></div><div class="topbar-right"><span class="secure-label"><span class="secure-dot"></span>Demo account</span><span class="avatar">API</span></div></header>
+      <div class="page-wrap api-page">
+        <a class="back-link" href="/">← Back to dashboard</a>
+        <section class="api-intro"><p class="eyebrow">SIMPLEBANK · SYSTEM DESIGN PRACTICAL</p><h1>REST API reference</h1><p>A quick guide to the demo endpoints, request shapes, and response codes.</p><div class="base-url"><span>BASE URL</span><code>http://localhost:3000</code></div></section>
+        <div class="flow-block"><div class="flow-title"><span class="eyebrow">LOW-LEVEL DESIGN</span><strong>One request, through the system</strong></div><div class="flow-track"><span>Customer</span><i>→</i><span>Frontend</span><i>→</i><span>Express REST API</span><i>→</i><span>Banking Service</span><i>→</i><span>Data Storage</span><i>→</i><span>JSON Response</span></div><p>The browser sends JSON to a route. The route calls the banking service, which reads or changes the in-memory data and returns a result.</p></div>
+
+        <section class="endpoint-section"><div class="endpoint-heading"><div><p class="eyebrow">ACCOUNTS</p><h2>Read account information</h2></div></div>
+          <article class="endpoint"><div class="endpoint-title"><span class="method get">GET</span><code>/accounts/:id</code><span class="endpoint-purpose">Get account details</span></div><div class="endpoint-body"><div><h3>Example request</h3><pre><code>GET /accounts/1024</code></pre></div><div><h3>Example response · 200 OK</h3><pre><code>{
+  "account": {
+    "id": "1024",
+    "customerName": "Alex Morgan",
+    "accountNumber": "•••• •••• 1024",
+    "accountType": "Savings Account",
+    "status": "Active",
+    "balance": 48250.75,
+    "currency": "INR"
+  }
+}</code></pre></div><p class="status-note"><b>404</b> Account ID does not exist.</p></div></article>
+          <article class="endpoint"><div class="endpoint-title"><span class="method get">GET</span><code>/accounts/:id/balance</code><span class="endpoint-purpose">Check the current balance</span></div><div class="endpoint-body"><div><h3>Example request</h3><pre><code>GET /accounts/1024/balance</code></pre></div><div><h3>Example response · 200 OK</h3><pre><code>{ "accountId": "1024", "balance": 48250.75, "currency": "INR" }</code></pre></div><p class="status-note"><b>404</b> Account ID does not exist.</p></div></article>
+          <article class="endpoint"><div class="endpoint-title"><span class="method get">GET</span><code>/accounts/:id/transactions</code><span class="endpoint-purpose">List account transactions</span></div><div class="endpoint-body"><div><h3>Example request</h3><pre><code>GET /accounts/1024/transactions</code></pre></div><div><h3>Example response · 200 OK</h3><pre><code>{
+  "accountId": "1024",
+  "transactions": [
+    {
+      "id": "TXN-24018",
+      "beneficiary": "Jordan Lee",
+      "amount": -1250,
+      "date": "2026-10-07T10:25:00.000Z",
+      "status": "Completed"
+    }
+  ]
+}</code></pre></div><p class="status-note"><b>404</b> Account ID does not exist.</p></div></article>
+        </section>
+
+        <section class="endpoint-section"><div class="endpoint-heading"><div><p class="eyebrow">TRANSFERS</p><h2>Send a demo transfer</h2></div></div>
+          <article class="endpoint"><div class="endpoint-title"><span class="method post">POST</span><code>/transfers</code><span class="endpoint-purpose">Validate and record a transfer</span></div><div class="endpoint-body"><div><h3>Example request · JSON</h3><pre><code>POST /transfers
+Idempotency-Key: demo-transfer-001
+Content-Type: application/json
+
+{
+  "fromAccount": "1024",
+  "beneficiaryId": "B001",
+  "amount": 500,
+  "remarks": "Monthly payment"
+}</code></pre></div><div><h3>Example response · 201 Created</h3><pre><code>{
+  "transaction": {
+    "id": "TXN-58321",
+    "beneficiaryId": "B001",
+    "beneficiary": "Jordan Lee",
+    "amount": -500,
+    "date": "2026-10-09T10:00:00.000Z",
+    "status": "Completed",
+    "remarks": "Monthly payment"
+  },
+  "availableBalance": 47750.75,
+  "replayed": false
+}</code></pre></div><p class="status-note"><b>400</b> Invalid amount, missing idempotency key, or insufficient balance. <b>404</b> Account or beneficiary not found. <b>409</b> Key reused for a different request. Repeating the same key and request returns the original result with <code>200 OK</code>.</p></div></article>
+        </section>
+
+        <section class="endpoint-section"><div class="endpoint-heading"><div><p class="eyebrow">BENEFICIARIES</p><h2>Manage saved recipients</h2></div></div>
+          <article class="endpoint"><div class="endpoint-title"><span class="method get">GET</span><code>/beneficiaries</code><span class="endpoint-purpose">List demo beneficiaries</span></div><div class="endpoint-body"><div><h3>Example request</h3><pre><code>GET /beneficiaries</code></pre></div><div><h3>Example response · 200 OK</h3><pre><code>{
+  "beneficiaries": [
+    { "id": "B001", "name": "Jordan Lee", "bankName": "Northstar Bank", "accountNumber": "•••• 8842" }
+  ]
+}</code></pre></div></div></article>
+          <article class="endpoint"><div class="endpoint-title"><span class="method post">POST</span><code>/beneficiaries</code><span class="endpoint-purpose">Add a demo beneficiary</span></div><div class="endpoint-body"><div><h3>Example request · JSON</h3><pre><code>POST /beneficiaries
+Content-Type: application/json
+
+{ "name": "Jamie Patel", "bankName": "Northstar Bank", "accountNumber": "12345678" }</code></pre></div><div><h3>Example response · 201 Created</h3><pre><code>{
+  "beneficiary": {
+    "id": "B12345678",
+    "name": "Jamie Patel",
+    "bankName": "Northstar Bank",
+    "accountNumber": "•••• 5678"
+  }
+}</code></pre></div><p class="status-note"><b>400</b> A required field is missing.</p></div></article>
+          <article class="endpoint"><div class="endpoint-title"><span class="method delete">DELETE</span><code>/beneficiaries/:id</code><span class="endpoint-purpose">Remove a beneficiary</span></div><div class="endpoint-body"><div><h3>Example request</h3><pre><code>DELETE /beneficiaries/B001</code></pre></div><div><h3>Example response · 200 OK</h3><pre><code>{ "message": "Beneficiary deleted." }</code></pre></div><p class="status-note"><b>404</b> Beneficiary ID does not exist.</p></div></article>
+        </section>
+
+        <aside class="safety-note"><span class="safety-mark">!</span><div><h2>Important security note</h2><p>This project uses sample data in memory and is only for learning. It does not connect to accounts or move real money. A production banking system needs secure authentication and authorization, encrypted transport and storage, durable database transactions, audit logging, fraud monitoring, rate limits, and additional security controls. The in-memory transfer update is synchronous for this single-process demo; it is not a substitute for a database transaction.</p></div></aside>
+        <footer class="page-footer"><span>SimpleBank <span class="footer-separator">/</span> REST API reference</span><a href="/">Return to dashboard →</a></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
